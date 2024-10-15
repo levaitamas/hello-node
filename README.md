@@ -1,13 +1,10 @@
 # hello-node
 
-<p align="left">
- <a href="https://hub.docker.com/r/levaitamas/hello-node" alt="Docker pulls">
-  <img src="https://img.shields.io/docker/pulls/levaitamas/hello-node" /></a>
-
 A minimal webserver that returns the hostname. Useful for teaching and debugging K8s networking.
 
 Available as:
 - [docker.io/levaitamas/hello-node](https://hub.docker.com/r/levaitamas/hello-node)
+- [ghcr.io/levaitamas/hello-node](https://github.com/levaitamas/hello-node/pkgs/container/hello-node)
 
 ## Usage examples
 
@@ -32,7 +29,7 @@ spec:
     spec:
       containers:
       - name: hello
-        image: docker.io/levaitamas/hello-node
+        image: ghcr.io/levaitamas/hello-node
 ---
 apiVersion: v1
 kind: Service
