@@ -38,15 +38,14 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
-    targetPort: 8080
+  - port: 8080
   selector:
     app: hello
 ```
 
 2. Check connectivity:
 ```
-$ curl $(kubectl get service hello -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):80
+$ curl $(kubectl get service hello -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080
 Hello World from hello-6bcc85747b-mxwl4!
 ```
 
