@@ -17,6 +17,4 @@ RUN apk add --no-cache \
 
 COPY --from=builder /hello_server /usr/bin/hello_server
 
-EXPOSE 8080
-
 ENTRYPOINT ["hello_server"]
