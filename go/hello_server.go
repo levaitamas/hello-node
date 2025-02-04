@@ -1,15 +1,45 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 )
 
 const defPort int = 8080
+
+type FixCharReadSeeker struct {
+	numBytes int64
+	char     byte
+}
+
+func NewFixCharReadSeeker(numBytes int64, char byte) FixCharReadSeeker {
+	return FixCharReadSeeker{numBytes, char}
+}
+
+func (f FixCharReadSeeker) Read(p []byte) (n int, err error) {
+	for i := 0; i < len(p); i++ {
+		p[i] = f.char
+	}
+	return len(p), nil
+}
+
+func (f FixCharReadSeeker) Seek(offset int64, whence int) (int64, error) {
+	switch whence {
+	case io.SeekStart:
+		return offset, nil
+	case io.SeekCurrent:
+		return 0, nil
+	case io.SeekEnd:
+		return f.numBytes - offset, nil
+	default:
+		return -1, fmt.Errorf("invalid 'whence' parameter")
+	}
+}
 
 func main() {
 	envPort, ok := os.LookupEnv("PORT")
@@ -32,9 +62,9 @@ func main() {
 			w.WriteHeader(406)
 			return
 		}
-		if _, err = w.Write(bytes.Repeat([]byte("x"), numBytes)); err != nil {
-			log.Println("Error while serving path:", r.URL)
-		}
+
+		http.ServeContent(w, r, "", time.Time{},
+			NewFixCharReadSeeker(int64(numBytes), byte('x')))
 	})
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
